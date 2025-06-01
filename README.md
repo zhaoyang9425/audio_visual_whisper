@@ -1,7 +1,7 @@
 # Injecting Visual Features into Whisper for Parameter-Efficient Noise-Robust Audio-Visual Speech Recognition
 The proposed AVWhisper is a parameter-efficient AVSR model by injecting visual features from AV-HuBERT encoder into the pre-trained Whisper model through lightweight adapters based on Low-Rank Adaptation (LoRA) and prompt-based techniques.
 ## Setup
-We used Python 3.8.19 and PyTorch 2.3.0 on NVIDIA 3090 GPU to train and test our model.
+We used Python 3.8.19 and PyTorch 2.3.0 on NVIDIA 4090 GPU to train and test our model.
 ```bash
 conda create -n avwhisper python=3.8
 conda activate avwhisper
