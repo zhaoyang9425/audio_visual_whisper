@@ -249,6 +249,9 @@ def main():
     torch.backends.cudnn.benchmark = True
     print(args)
 
+    os.makedirs("checkpoint", exist_ok=True)
+    os.makedirs("logs", exist_ok=True)
+
     tokenizer = get_tokenizer(multilingual=".en" not in os.path.basename(args.whisper_checkpoint_file), task="transcribe")
     with open(args.whisper_checkpoint_file, "rb") as fp:
         checkpoint = torch.load(fp, map_location=args.device)
