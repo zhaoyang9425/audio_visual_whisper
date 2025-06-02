@@ -77,7 +77,6 @@ CUDA_VISIBLE_DEVICES=0 python training_avwhisper.py  \
 --train_manifest_path ${DATA_ROOT}/train.tsv  \
 --train_label_path ${DATA_ROOT}/train.wrd  \
 --whisper_checkpoint_file ${CHECKPOINT_PATH}  \
---video_type finetuned_deep  \
 --prompt_length 16  \
 --deep  \
 --use_mlp \
@@ -88,6 +87,15 @@ CUDA_VISIBLE_DEVICES=0 python training_avwhisper.py  \
 --step_size 2  \
 --batch_size 1 | tee logs/train.log
 ```
+
+Some available checkpoints and test logs can be found [here](https://huggingface.co/zhaoyang9425/AVWhisper/tree/main).
+
+| Whisper  | Training Datad | Model Link                                                                                                   |
+|----------|----------------|--------------------------------------------------------------------------------------------------------------|
+| Large-V2 | 30h clean      | [largev2_clean_30h](https://huggingface.co/zhaoyang9425/AVWhisper/blob/main/largev2_clean_30h)               |
+| Large-V2 | 30h noisy      | [largev2_noisy_random_30h](https://huggingface.co/zhaoyang9425/AVWhisper/blob/main/largev2_noisy_random_30h) |
+| Medium   | 433h clean     | [medium_clean_433h](https://huggingface.co/zhaoyang9425/AVWhisper/blob/main/medium_clean_433h)               |
+| Medium   | 433h noisy     | [medium_noisy_random_433h](https://huggingface.co/zhaoyang9425/AVWhisper/blob/main/medium_noisy_random_433h) |
 
 ## Inference
 ```bash
@@ -100,7 +108,6 @@ CUDA_VISIBLE_DEVICES=0 python evaluate_avwhisper.py  \
 --test_manifest_path ${DATA_ROOT}/test.tsv  \
 --test_label_path ${DATA_ROOT}/test.wrd  \
 --whisper_checkpoint_file ${CHECKPOINT_PATH}  \
---video_type finetuned_deep  \
 --prompt_length 16  \
 --deep  \
 --use_mlp \

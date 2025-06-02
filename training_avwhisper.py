@@ -170,37 +170,6 @@ class System(nn.Module):
         return logits
 
 
-def train(
-        model,
-        device,
-        train_loader,
-        epochs,
-        optimizer,
-        scheduler,
-        exp_name,
-        train_loss=None,
-        init_epoch=-1,
-):
-    model.to(device)
-    model.train()
-    # model.eval()
-    train_loss = [] if train_loss is None else train_loss.tolist()
-    for e in range(init_epoch + 1, epochs):
-        pbar = tqdm(train_loader)
-        for i, (x, vfeat, y_in, y_out) in enumerate(pbar):
-            x, vfeat, y_in, y_out = x.to(device), vfeat.to(device), y_in.to(device), y_out.to(device)
-            logits = model(x, vfeat, y_in)
-            loss = F.cross_entropy(logits.transpose(1, 2), y_out)
-            loss.backward()
-            # if (i + 1) % 16 == 0:
-            optimizer.step()
-            optimizer.zero_grad()
-            train_loss.append(loss.detach().cpu().numpy())
-            pbar.set_postfix({"loss": train_loss[-1], 'loss_mean': np.sum(train_loss) / len(train_loss)})
-        scheduler.step()
-        torch.save(save_state_dict(model), './checkpoint/avwhisper_' + exp_name + str(e))
-
-
 def train_test(
         model,
         device,

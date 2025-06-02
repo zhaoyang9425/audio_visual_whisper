@@ -90,34 +90,21 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def test(loader, tokenizer, model, mytask, normal, device):
-    real_wer_scores = []
-    ideal_wer_scores = []
+def test(loader, mytask, normal, device):
+    wer_scores = []
     # pbar = tqdm(loader)
     with torch.no_grad():
         for x, vfeat, y_in, y_out, text in loader:
             x, vfeat, y_in = x.to(device), vfeat.to(device), y_in.to(device)
-            print(text)
+            print("\t".join(text))
             truth_results = mytask.run(x, vfeat)
             for result, t in zip(truth_results, text):
                 wer_ = wer(normal(t), normal(result.text))
-                real_wer_scores.append(wer_)
-                print(result.text, wer_)
-
-
-            logits = model(x, vfeat, y_in)
-            tokens = logits.argmax(dim=-1)
-            for token, t in zip(tokens, text):
-                result = tokenizer.decode(token).replace("<|en|>", "").replace("<|transcribe|>", "").replace("<|notimestamps|>", "").replace("<|endoftext|>", "")
-                wer_ = wer(normal(t), normal(result))
-                ideal_wer_scores.append(wer_)
-                print(tokenizer.decode(token), wer_)
-                # wer_scores.append(wer_)
-                # pbar.set_postfix({'wer': wer_, 'wer_mean': sum(wer_scores)/len(wer_scores), 'text': result})
-                # print(result, wer_, t)
+                wer_scores.append(wer_)
+                print(result.text)
 
             print()
-    return sum(real_wer_scores)/len(real_wer_scores), sum(ideal_wer_scores)/len(ideal_wer_scores)
+    return sum(wer_scores)/len(wer_scores)
 
 
 class PyTorchInference(Inference):
@@ -369,7 +356,7 @@ if __name__ == '__main__':
     task = AVWhisperDecodingTask(system, options)
     normalizer = EnglishTextNormalizer()
 
-    score = test(loader=dataloader, tokenizer=tokenizer, model=system, mytask=task, normal=normalizer, device=args.device)
+    score = test(loader=dataloader, mytask=task, normal=normalizer, device=args.device)
     print(score)
 
 
